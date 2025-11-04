@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: iot-sensor-api-service
+  labels:
+    app: iot-sensor-api
+spec:
+  selector:
+    app: iot-sensor-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iot-sensor-api
+  labels:
+    app: iot-sensor-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iot-sensor-api
+  template:
+    metadata:
+      labels:
+        app: iot-sensor-api
+    spec:
+      containers:
+        - name: iot-sensor-api
+          image: iot-sensor-api:latest
+          imagePullPolicy: Never # Use local image
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m # 0.1 CPU cores
+              memory: 128Mi # 128 MB RAM
+            limits:
+              cpu: 500m # 0.5 CPU cores max
+              memory: 256Mi # 256 MB RAM max
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: NODE_ENV
+              value: "production"
